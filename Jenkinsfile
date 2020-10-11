@@ -1,28 +1,19 @@
-pipeline {
-  agent {
-	dockerfile true
-  }
-  stages {
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh 'sudo docker build -t bhavanaprabhu/testrepo:FirstProject_v1 .'
-      }
+node {
+    def app
+
+    stage('Clone repository') {
+        checkout scm
     }
-    stage('Docker Push') {
-      agent any
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockercreds', passwordVariable: 'dockercredsPassword', usernameVariable: 'dockercredsUser')]) {
-          sh 'sudo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}'
-          sh 'sudodocker push bhavanaprabhu/testrepo:FirstProject_v1'
+
+    stage('Build image') {
+        app = docker.build("FirstProject")
+    }
+
+
+    stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'dockercreds') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
         }
-      }
     }
-	stage('Docker Run') {
-      agent any
-      steps {
-        sh 'sudo docker run bhavanaprabhu/testrepo:FirstProject_v1'
-      }
-    }
-  }
 }
