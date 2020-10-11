@@ -16,4 +16,10 @@ node {
             app.push("latest")
         }
     }
+	
+	stage('Run contatiner') {
+        docker.image('bhavanaprabhu/testrepo:FirstProject'+"${env.BUILD_NUMBER}").withRun() { c->
+        sh "docker logs ${c.id}"
+		}
+	}
 }
