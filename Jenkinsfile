@@ -8,11 +8,11 @@ node {
     }
     stage('Push image') {
         docker.withRegistry('https://registry.hub.docker.com', 'dockercreds') {
-            app.push("bhavanaprabhu/testrepo:FirstProject"+"${env.BUILD_NUMBER}")
+            app.push("FirstProject"+"${env.BUILD_NUMBER}")
         }
     }
 	stage('Run container') {
-        docker.image('bhavanaprabhu/testrepo:FirstProject'+"${env.BUILD_NUMBER}").withRun() { c->
+        docker.image(':FirstProject'+'${env.BUILD_NUMBER}').withRun() { c->
         	sh "docker logs ${c.id}"
 		}
 	}
