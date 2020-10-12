@@ -12,8 +12,8 @@ node {
         }
     }
 	stage('Run container') {
-        docker.image('bhavanaprabhu/testrepo:FirstProject'+'${env.BUILD_NUMBER}).withRun() { c->
-        	sh "docker logs ${c.id}"
+        docker.image('bhavanaprabhu/testrepo:FirstProject'+'${env.BUILD_NUMBER}).withRun() { 
+        	c-> sh "docker logs ${c.id}"
 		}
 	}
 }
